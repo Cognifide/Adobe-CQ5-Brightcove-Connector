@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0"
+    jcr:mixinTypes="[cq:Console]"
+    jcr:primaryType="cq:Widget"
+    jcr:title="CQ5 Brightcove"
+    sling:redirect="{Boolean}true"
+    sling:resourceType="brightcove/components/tools/brightcoveadmin"
+    sling:vanityOrder="{Long}400"
+    sling:vanityPath="/brightcove/admin"
+    consoleDescription="Manage Your Brightcove Videos And Playlists."
+    consoleTitle="Brightcove"
+    iconClass="brightcoveadmin"
+    id="cq-brightcove"
+    jsLibs="[]"
+    tabTitle="Digital Assets"
+    xtype="siteadmin"/>

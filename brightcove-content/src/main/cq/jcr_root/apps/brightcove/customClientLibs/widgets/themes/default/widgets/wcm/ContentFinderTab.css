@@ -1,0 +1,14 @@
+#CQ .cq-cft-tab-icon.brightcove {
+    background-image:url(../../icons/16x16/bc-v.png);
+}
+#CQ .cq-cft-tab-icon.brightcove_p {
+    background-image:url(../../icons/16x16/bc-p.png);
+}
+
+.cq-switcher-brightcoveadmin-inactive {
+    background-image:url(../../icons/16x16/brightcove-inact.png);
+}
+
+.cq-switcher-brightcoveadmin {
+    background-image:url(../../icons/16x16/brightcove-active.png);
+}

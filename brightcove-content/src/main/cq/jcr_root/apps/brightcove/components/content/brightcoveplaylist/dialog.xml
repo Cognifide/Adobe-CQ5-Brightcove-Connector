@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+    jcr:primaryType="cq:Dialog"
+    title="Dialog"
+    xtype="dialog">
+    <items jcr:primaryType="cq:TabPanel">
+        <items jcr:primaryType="cq:WidgetCollection">
+            <tab1
+                jcr:primaryType="cq:Panel"
+                title="General">
+                <items jcr:primaryType="cq:WidgetCollection">
+                    <size
+                        jcr:primaryType="cq:Widget"
+                        fieldLabel="Size"
+                        heightParameter="./height"
+                        widthParameter="./width"
+                        xtype="sizefield"/>
+                    <align
+                        jcr:primaryType="cq:Widget"
+                        fieldLabel="Component Alignment:"
+                        name="./align"
+                        type="select"
+                        xtype="selection">
+                        <options jcr:primaryType="cq:WidgetCollection">
+                            <left
+                                jcr:primaryType="nt:unstructured"
+                                text="Left"
+                                value="left"/>
+                            <center
+                                jcr:primaryType="nt:unstructured"
+                                text="Center"
+                                value="center"/>
+                            <right
+                                jcr:primaryType="nt:unstructured"
+                                text="Right"
+                                value="right"/>
+                        </options>
+                    </align>
+                    <videoPlayerPL
+                        jcr:primaryType="cq:Widget"
+                        allowBlank="false"
+                        fieldDescription=""
+                        fieldLabel="Playlist:"
+                        fieldSubLabel=""
+                        name="./videoPlayerPL"
+                        options="/bin/brightcove/api?a=4"
+                        optionsQTipField="name"
+                        optionsRoot="items"
+                        optionsTextField="name"
+                        optionsValueField="path"
+                        type="select"
+                        xtype="selection">
+                        <optionsConfig
+                            jcr:primaryType="nt:unstructured"
+                            editable="{Boolean}true"/>
+                    </videoPlayerPL>
+                </items>
+            </tab1>
+            <tab2
+                jcr:primaryType="cq:Panel"
+                title="Account Settings">
+                <items jcr:primaryType="cq:WidgetCollection">
+                    <playerID
+                        jcr:primaryType="cq:Widget"
+                        allowBlank="false"
+                        fieldDescription=""
+                        fieldLabel="Player ID:"
+                        fieldSubLabel=""
+                        name="./playerID"
+                        xtype="textfield">
+                        <listeners
+                            jcr:primaryType="nt:unstructured"
+                            loadcontent="function(field,record,path){&#xa;&#x9;var loadDate = new CQ.Ext.data.JsonStore({&#xa;    &#x9;url:  '/bin/brightcove/players?group=playlist',&#xa;&#x9;    method: 'GET',&#xa;&#x9;    root: 'items',&#xa;    &#x9;fields: [{name:'playerId',type:'string'}]&#xa;&#x9;});&#xa;&#x9;loadDate.load({&#xa;&#x9;  callback: function(r,options,success) {&#xa;&#x9;&#x9;&#x9;if (typeof field.value === &quot;undefined&quot; || field.value.trim() == &quot;&quot;) field.setValue(loadDate.data.itemAt(0).data.playerId);&#xa;&#x9;&#x9;}&#xa;&#x9;});&#xa;&#x9;&#xa;}"/>
+                    </playerID>
+                    <playerKey
+                        jcr:primaryType="cq:Widget"
+                        allowBlank="false"
+                        fieldDescription=""
+                        fieldLabel="Player Key:"
+                        fieldSubLabel=""
+                        name="./playerKey"
+                        xtype="textfield">
+                        <listeners
+                            jcr:primaryType="nt:unstructured"
+                            loadcontent="function(field,record,path){&#xa;&#x9;var loadDate = new CQ.Ext.data.JsonStore({&#xa;    &#x9;url:  '/bin/brightcove/players?group=playlist',&#xa;&#x9;    method: 'GET',&#xa;&#x9;    root: 'items',&#xa;    &#x9;fields: [{name:'playerKey',type:'string'}]&#xa;&#x9;});&#xa;&#x9;loadDate.load({&#xa;&#x9;  callback: function(r,options,success) {&#xa;&#x9;&#x9;&#x9;if (typeof field.value === &quot;undefined&quot; || field.value.trim() == &quot;&quot;) field.setValue(loadDate.data.itemAt(0).data.playerKey);&#xa;&#x9;&#x9;}&#xa;&#x9;});&#xa;&#x9;&#xa;}"/>
+                    </playerKey>
+                </items>
+            </tab2>
+        </items>
+    </items>
+</jcr:root>

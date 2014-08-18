@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.brightcove.proserve</groupId>
 	<artifactId>brightcove-cq5</artifactId>
-	<version>2.2.2-SNAPSHOT</version>
+	<version>2.2.2</version>
 	<packaging>pom</packaging>
 	<name>Brightcove CQ5</name>
 
@@ -14,7 +14,7 @@
 		<url>https://github.com/Cognifide/Adobe-CQ5-Brightcove-Connector</url>
 		<connection>scm:git:git://github.com/Cognifide/Adobe-CQ5-Brightcove-Connector.git</connection>
 		<developerConnection>scm:git:https://github.com/Cognifide/Adobe-CQ5-Brightcove-Connector.git</developerConnection>
-	  <tag>HEAD</tag>
+	  <tag>brightcove-cq5-2.2.2</tag>
   </scm>
 
 	<properties>

@@ -1,3 +1,2 @@
 #base=source
-brightcoveUpload.js
 brightcovecombo.js

@@ -1,5 +1,34 @@
 package com.brightcove.proserve.mediaapi.webservices;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.sling.commons.json.JSONArray;
+import org.apache.sling.commons.json.JSONException;
+import org.apache.sling.commons.json.JSONObject;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.brightcove.proserve.mediaapi.wrapper.ReadApi;
 import com.brightcove.proserve.mediaapi.wrapper.apiobjects.Playlist;
 import com.brightcove.proserve.mediaapi.wrapper.apiobjects.Video;
@@ -9,27 +38,13 @@ import com.brightcove.proserve.mediaapi.wrapper.apiobjects.enums.SortByTypeEnum;
 import com.brightcove.proserve.mediaapi.wrapper.apiobjects.enums.SortOrderTypeEnum;
 import com.brightcove.proserve.mediaapi.wrapper.apiobjects.enums.VideoFieldEnum;
 import com.brightcove.proserve.mediaapi.wrapper.utils.CollectionUtils;
-import org.apache.sling.commons.json.JSONArray;
-import org.apache.sling.commons.json.JSONException;
-import org.apache.sling.commons.json.JSONObject;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.*;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 public class BrcUtils {
 
 	public static BrcService getSlingSettingService() {
 		BundleContext bundleContext = FrameworkUtil.getBundle(BrcService.class).getBundleContext();
-		return (BrcService) bundleContext.getService(bundleContext.getServiceReference(BrcService.class.getName()));
+		return (BrcService) bundleContext.getService(bundleContext.getServiceReference(BrcService.class
+				.getName()));
 	}
 
 	static List sortByValue(final Map m) {
@@ -68,11 +83,13 @@ public class BrcUtils {
 
 		try {
 
-			URL serverAddress = new URL("http://api.brightcove.com/services/library?command=find_video_by_id&video_id=" + videoId + "&video_fields=name,length&token=" + tokenID);
-			//set up out communications stuff
+			URL serverAddress = new URL(
+					"http://api.brightcove.com/services/library?command=find_video_by_id&video_id=" + videoId
+							+ "&video_fields=name,length&token=" + tokenID);
+			// set up out communications stuff
 			connection = null;
 
-			//Set up the initial connection
+			// Set up the initial connection
 			connection = (HttpURLConnection) serverAddress.openConnection();
 			connection.setRequestMethod("GET");
 			connection.setDoOutput(true);
@@ -92,11 +109,11 @@ public class BrcUtils {
 
 			String temp_result = js.getString("length");
 			long millis = Long.parseLong(temp_result);
-			result = String.format("%02d:%02d",
+			result = String.format(
+					"%02d:%02d",
 					TimeUnit.MILLISECONDS.toMinutes(millis),
-					TimeUnit.MILLISECONDS.toSeconds(millis) -
-							TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
-			);
+					TimeUnit.MILLISECONDS.toSeconds(millis)
+							- TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
 
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -107,8 +124,9 @@ public class BrcUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			//close the connection, set all objects to null
-			if (connection != null) connection.disconnect();
+			// close the connection, set all objects to null
+			if (connection != null)
+				connection.disconnect();
 			rd = null;
 			wr = null;
 			connection = null;
@@ -119,7 +137,6 @@ public class BrcUtils {
 	static String getName(String videoId, String tokenID) {
 		String result = "";
 
-
 		HttpURLConnection connection = null;
 		OutputStreamWriter wr = null;
 		BufferedReader rd = null;
@@ -129,11 +146,13 @@ public class BrcUtils {
 
 		try {
 
-			serverAddress = new URL("http://api.brightcove.com/services/library?command=find_video_by_id&video_id=" + videoId + "&video_fields=name,length&token=" + tokenID);
-			//set up out communications stuff
+			serverAddress = new URL(
+					"http://api.brightcove.com/services/library?command=find_video_by_id&video_id=" + videoId
+							+ "&video_fields=name,length&token=" + tokenID);
+			// set up out communications stuff
 			connection = null;
 
-			//Set up the initial connection
+			// Set up the initial connection
 			connection = (HttpURLConnection) serverAddress.openConnection();
 			connection.setRequestMethod("GET");
 			connection.setDoOutput(true);
@@ -152,7 +171,6 @@ public class BrcUtils {
 
 			result = js.getString("name");
 
-
 		} catch (JSONException e) {
 			e.printStackTrace();
 		} catch (MalformedURLException e) {
@@ -162,7 +180,7 @@ public class BrcUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			//close the connection, set all objects to null
+			// close the connection, set all objects to null
 			connection.disconnect();
 			rd = null;
 			sb = null;
@@ -194,18 +212,30 @@ public class BrcUtils {
 
 				if (query != null && !query.trim().isEmpty()) {
 					if (isLong(query)) {
-						serverAddress = new URL("http://api.brightcove.com/services/library?command=find_videos_by_ids&video_ids=" + URLEncoder.encode(query.trim(), "UTF-8") + "&video_fields=name,id,thumbnailURL&token=" + token);
+						serverAddress = new URL(
+								"http://api.brightcove.com/services/library?command=find_videos_by_ids&video_ids="
+										+ URLEncoder.encode(query.trim(), "UTF-8")
+										+ "&video_fields=name,id,thumbnailURL&token=" + token);
 					} else {
-						serverAddress = new URL("http://api.brightcove.com/services/library?command=search_videos&sort_by=DISPLAY_NAME&any=search_text:" + URLEncoder.encode(query.trim(), "UTF-8") + "&any=tag:" + URLEncoder.encode(query.trim(), "UTF-8") + "&video_fields=name,id,thumbnailURL&get_item_count=true&page_size=20&page_number=" + pageNumber + "&token=" + token);
+						serverAddress = new URL(
+								"http://api.brightcove.com/services/library?command=search_videos&sort_by=DISPLAY_NAME&any=search_text:"
+										+ URLEncoder.encode(query.trim(), "UTF-8")
+										+ "&any=tag:"
+										+ URLEncoder.encode(query.trim(), "UTF-8")
+										+ "&video_fields=name,id,thumbnailURL&get_item_count=true&page_size=20&page_number="
+										+ pageNumber + "&token=" + token);
 					}
 				} else {
-					serverAddress = new URL("http://api.brightcove.com/services/library?command=search_videos&sort_by=DISPLAY_NAME&video_fields=" + params + "&get_item_count=true&page_number=" + pageNumber + "&token=" + token);
+					serverAddress = new URL(
+							"http://api.brightcove.com/services/library?command=search_videos&sort_by=DISPLAY_NAME&video_fields="
+									+ params + "&get_item_count=true&page_number=" + pageNumber + "&token="
+									+ token);
 				}
 				loggerBRi.debug(query);
-				//set up out communications stuff
+				// set up out communications stuff
 				connection = null;
 
-				//Set up the initial connection
+				// Set up the initial connection
 				connection = (HttpURLConnection) serverAddress.openConnection();
 				connection.setRequestMethod("GET");
 				connection.setDoOutput(true);
@@ -237,16 +267,17 @@ public class BrcUtils {
 				JSONObject tempJSON;
 				String csvString = "\"Video Name\",\"Video ID\"\r\n";
 
-				for (Iterator i = sortByValue(sortedjson).iterator(); i.hasNext(); ) {
+				for (Iterator i = sortByValue(sortedjson).iterator(); i.hasNext();) {
 					String key = (String) i.next();
 					tempJSON = sortedjson.get(key);
-					csvString += "\"" + tempJSON.getString("name") + "\",\"" + tempJSON.getString("id") + "\"\r\n";
+					csvString += "\"" + tempJSON.getString("name") + "\",\"" + tempJSON.getString("id")
+							+ "\"\r\n";
 				}
 				result = csvString;
 			} else {
 				JSONObject jsTotal = new JSONObject();
 
-				for (Iterator i = sortByValue(sortedjson).iterator(); i.hasNext(); ) {
+				for (Iterator i = sortByValue(sortedjson).iterator(); i.hasNext();) {
 					String key = (String) i.next();
 					jsTotal.accumulate("items", sortedjson.get(key));
 				}
@@ -263,7 +294,7 @@ public class BrcUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			//close the connection, set all objects to null
+			// close the connection, set all objects to null
 			connection.disconnect();
 			rd = null;
 			sb = null;
@@ -273,7 +304,8 @@ public class BrcUtils {
 		return result;
 	}
 
-	public static String getList(String token, String params, Boolean exportCSV, String start, String limit, String query) {
+	public static String getList(String token, String params, Boolean exportCSV, String start, String limit,
+			String query) {
 
 		String result = "";
 		Logger loggerBRi = LoggerFactory.getLogger("Brightcove");
@@ -300,18 +332,29 @@ public class BrcUtils {
 
 			if (query != null && !query.trim().isEmpty()) {
 				if (isLong(query)) {
-					serverAddress = new URL("http://api.brightcove.com/services/library?command=find_videos_by_ids&video_ids=" + URLEncoder.encode(query.trim(), "UTF-8") + "&video_fields=name,id,thumbnailURL&token=" + token);
+					serverAddress = new URL(
+							"http://api.brightcove.com/services/library?command=find_videos_by_ids&video_ids="
+									+ URLEncoder.encode(query.trim(), "UTF-8")
+									+ "&video_fields=name,id,thumbnailURL&token=" + token);
 				} else {
-					serverAddress = new URL("http://api.brightcove.com/services/library?command=search_videos&sort_by=DISPLAY_NAME&any=search_text:" + URLEncoder.encode(query.trim(), "UTF-8") + "&any=tag:" + URLEncoder.encode(query.trim(), "UTF-8") + "&video_fields=name,id,thumbnailURL&get_item_count=true&page_size=20&page_number=" + pageNumber + "&token=" + token);
+					serverAddress = new URL(
+							"http://api.brightcove.com/services/library?command=search_videos&sort_by=DISPLAY_NAME&any=search_text:"
+									+ URLEncoder.encode(query.trim(), "UTF-8")
+									+ "&any=tag:"
+									+ URLEncoder.encode(query.trim(), "UTF-8")
+									+ "&video_fields=name,id,thumbnailURL&get_item_count=true&page_size=20&page_number="
+									+ pageNumber + "&token=" + token);
 				}
 				loggerBRi.debug(serverAddress.toString());
 			} else {
-				serverAddress = new URL("http://api.brightcove.com/services/library?command=search_videos&sort_by=DISPLAY_NAME&video_fields=name,id,thumbnailURL&get_item_count=true&page_size=20&page_number=" + pageNumber + "&token=" + token);
+				serverAddress = new URL(
+						"http://api.brightcove.com/services/library?command=search_videos&sort_by=DISPLAY_NAME&video_fields=name,id,thumbnailURL&get_item_count=true&page_size=20&page_number="
+								+ pageNumber + "&token=" + token);
 			}
-			//set up out communications stuff
+			// set up out communications stuff
 			connection = null;
 
-			//Set up the initial connection
+			// Set up the initial connection
 			connection = (HttpURLConnection) serverAddress.openConnection();
 			connection.setRequestMethod("GET");
 			connection.setDoOutput(true);
@@ -326,8 +369,8 @@ public class BrcUtils {
 				sb.append(line + '\n');
 			}
 
-
-			JSONObject js = new JSONObject(sb.toString().replace("\"id\"", "\"videoid\"").replaceAll("\"videoid\":([0-9]*)", "\"path\":\"$1\""));
+			JSONObject js = new JSONObject(sb.toString().replace("\"id\"", "\"videoid\"")
+					.replaceAll("\"videoid\":([0-9]*)", "\"path\":\"$1\""));
 			totalPages = js.getInt("total_count");
 			if (isLong(query)) {
 
@@ -340,11 +383,11 @@ public class BrcUtils {
 
 				for (int i = 0; i < totalPages; i++) {
 					tempJSON = js.getJSONArray("items").getJSONObject(i);
-					csvString += "\"" + tempJSON.getString("name") + "\",\"" + tempJSON.getString("id") + "\"\r\n";
+					csvString += "\"" + tempJSON.getString("name") + "\",\"" + tempJSON.getString("id")
+							+ "\"\r\n";
 				}
 				result = csvString;
 			} else {
-
 
 				if (firstElement < totalPages) {
 					jsTotal.put("items", js.get("items"));
@@ -355,9 +398,7 @@ public class BrcUtils {
 
 			}
 
-
 			result = jsTotal.toString();
-
 
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -368,7 +409,7 @@ public class BrcUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			//close the connection, set all objects to null
+			// close the connection, set all objects to null
 			connection.disconnect();
 			rd = null;
 			sb = null;
@@ -379,7 +420,8 @@ public class BrcUtils {
 	}
 
 	public static boolean isLong(String input) {
-		if (input == null || input.trim().isEmpty()) return false;
+		if (input == null || input.trim().isEmpty())
+			return false;
 		try {
 			Long.parseLong(input);
 			return true;
@@ -423,7 +465,8 @@ public class BrcUtils {
 				any.add("tag:" + querystr);
 				any.add("search_text:" + querystr);
 
-				videos = rapi.SearchVideos(readToken, all, any, none, exact, SortByTypeEnum.DISPLAY_NAME, SortOrderTypeEnum.ASC, 20, pageNumber, videoFields, customFields);
+				videos = rapi.SearchVideos(readToken, all, any, none, exact, SortByTypeEnum.DISPLAY_NAME,
+						SortOrderTypeEnum.ASC, 20, pageNumber, videoFields, customFields);
 				if (isLong(querystr)) {
 					Set<Long> videoIds = new HashSet<Long>();
 					videoIds.add(Long.parseLong(querystr));
@@ -431,8 +474,10 @@ public class BrcUtils {
 				}
 			} else {
 				loggerBRi.error("noQuery");
-				videos = rapi.SearchVideos(readToken, all, any, none, exact, SortByTypeEnum.DISPLAY_NAME, SortOrderTypeEnum.ASC, 20, pageNumber, videoFields, customFields);
-				//videos = rapi.FindAllVideos(readToken, 20, pageNumber, SortByTypeEnum.DISPLAY_NAME, SortOrderTypeEnum.ASC, videoFields, customFields);
+				videos = rapi.SearchVideos(readToken, all, any, none, exact, SortByTypeEnum.DISPLAY_NAME,
+						SortOrderTypeEnum.ASC, 20, pageNumber, videoFields, customFields);
+				// videos = rapi.FindAllVideos(readToken, 20, pageNumber, SortByTypeEnum.DISPLAY_NAME,
+				// SortOrderTypeEnum.ASC, videoFields, customFields);
 			}
 			JSONArray items = new JSONArray();
 			if (videos != null) {
@@ -511,11 +556,13 @@ public class BrcUtils {
 			}
 			int totalPages = 0;
 
-			serverAddress = new URL("http://api.brightcove.com/services/library?command=search_videos&sort_by=DISPLAY_NAME&video_fields=name,id,thumbnailURL&get_item_count=true&page_size=20&page_number=" + pageNumber + "&token=" + token);
-			//set up out communications stuff
+			serverAddress = new URL(
+					"http://api.brightcove.com/services/library?command=search_videos&sort_by=DISPLAY_NAME&video_fields=name,id,thumbnailURL&get_item_count=true&page_size=20&page_number="
+							+ pageNumber + "&token=" + token);
+			// set up out communications stuff
 			connection = null;
 
-			//Set up the initial connection
+			// Set up the initial connection
 			connection = (HttpURLConnection) serverAddress.openConnection();
 			connection.setRequestMethod("GET");
 			connection.setDoOutput(true);
@@ -530,7 +577,6 @@ public class BrcUtils {
 				sb.append(line + '\n');
 			}
 
-
 			JSONObject js = new JSONObject(sb.toString());
 			totalPages = js.getInt("total_count");
 			if (firstElement < totalPages) {
@@ -540,8 +586,7 @@ public class BrcUtils {
 					sortedjson.put(row.getString("id"), row);
 				}
 
-
-				for (Iterator i = sortByValue(sortedjson).iterator(); i.hasNext(); ) {
+				for (Iterator i = sortByValue(sortedjson).iterator(); i.hasNext();) {
 					String key = (String) i.next();
 					jsTotal.accumulate("items", sortedjson.get(key));
 				}
@@ -550,9 +595,8 @@ public class BrcUtils {
 				jsTotal = new JSONObject("{\"items\":[],\"results\":0}");
 			}
 
-
-			result = jsTotal.toString().replace("\"id\"", "\"videoid\"").replaceAll("\"videoid\":([0-9]*)", "\"path\":\"$1\"");
-
+			result = jsTotal.toString().replace("\"id\"", "\"videoid\"")
+					.replaceAll("\"videoid\":([0-9]*)", "\"path\":\"$1\"");
 
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -563,7 +607,7 @@ public class BrcUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			//close the connection, set all objects to null
+			// close the connection, set all objects to null
 			connection.disconnect();
 			rd = null;
 			sb = null;
@@ -608,7 +652,8 @@ public class BrcUtils {
 				any.add("tag:" + querystr);
 				any.add("search_text:" + URLEncoder.encode(querystr, "UTF-8"));
 
-				videos = rapi.SearchVideos(readToken, all, any, none, exact, SortByTypeEnum.DISPLAY_NAME, SortOrderTypeEnum.ASC, 20, pageNumber, videoFields, customFields);
+				videos = rapi.SearchVideos(readToken, all, any, none, exact, SortByTypeEnum.DISPLAY_NAME,
+						SortOrderTypeEnum.ASC, 20, pageNumber, videoFields, customFields);
 				if (isLong(querystr)) {
 					Set<Long> videoIds = new HashSet<Long>();
 					videoIds.add(Long.parseLong(querystr));
@@ -616,8 +661,10 @@ public class BrcUtils {
 				}
 			} else {
 				loggerBRi.error("noQuery");
-				videos = rapi.SearchVideos(readToken, all, any, none, exact, SortByTypeEnum.DISPLAY_NAME, SortOrderTypeEnum.ASC, 20, pageNumber, videoFields, customFields);
-				//videos = rapi.FindAllVideos(readToken, 20, pageNumber, SortByTypeEnum.DISPLAY_NAME, SortOrderTypeEnum.ASC, videoFields, customFields);
+				videos = rapi.SearchVideos(readToken, all, any, none, exact, SortByTypeEnum.DISPLAY_NAME,
+						SortOrderTypeEnum.ASC, 20, pageNumber, videoFields, customFields);
+				// videos = rapi.FindAllVideos(readToken, 20, pageNumber, SortByTypeEnum.DISPLAY_NAME,
+				// SortOrderTypeEnum.ASC, videoFields, customFields);
 			}
 			JSONArray items = new JSONArray();
 			if (videos != null) {
@@ -682,8 +729,8 @@ public class BrcUtils {
 
 				Long playlistId = Long.parseLong(querystr);
 
-
-				playlist = rapi.FindPlaylistById(readToken, playlistId, videoFields, customFields, playlistFields);
+				playlist = rapi.FindPlaylistById(readToken, playlistId, videoFields, customFields,
+						playlistFields);
 			}
 
 			if (playlist != null) {
@@ -714,10 +761,9 @@ public class BrcUtils {
 
 	}
 
-	//Returns JSON of the video information based on a comma separated string of their ids.
+	// Returns JSON of the video information based on a comma separated string of their ids.
 	static JSONArray getVideosJsonByIds(String videoIds, String videoProperties, String tokenID) {
 		JSONArray jsa = new JSONArray();
-
 
 		HttpURLConnection connection = null;
 		OutputStreamWriter wr = null;
@@ -728,12 +774,14 @@ public class BrcUtils {
 
 		try {
 
-			serverAddress = new URL("http://api.brightcove.com/services/library?command=find_videos_by_ids&video_ids=" + videoIds + "&video_fields=" + videoProperties + "&token=" + tokenID);
+			serverAddress = new URL(
+					"http://api.brightcove.com/services/library?command=find_videos_by_ids&video_ids="
+							+ videoIds + "&video_fields=" + videoProperties + "&token=" + tokenID);
 
-			//set up connection
+			// set up connection
 			connection = null;
 
-			//Set up the initial connection
+			// Set up the initial connection
 			connection = (HttpURLConnection) serverAddress.openConnection();
 			connection.setRequestMethod("GET");
 			connection.setDoOutput(true);
@@ -748,10 +796,8 @@ public class BrcUtils {
 				sb.append(line + '\n');
 			}
 
-
 			JSONObject js = new JSONObject(sb.toString());
 			jsa = new JSONArray(js.get("items").toString());
-
 
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -762,7 +808,7 @@ public class BrcUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			//close the connection, set all objects to null
+			// close the connection, set all objects to null
 			connection.disconnect();
 			rd = null;
 			sb = null;
@@ -772,7 +818,9 @@ public class BrcUtils {
 		return jsa;
 	}
 
-	//FindAllPlaylists(String readToken, Integer pageSize, Integer pageNumber, SortByTypeEnum sortBy, SortOrderTypeEnum sortOrderType, EnumSet<VideoFieldEnum> videoFields, Set<String> customFields, EnumSet<PlaylistFieldEnum> playlistFields)
+	// FindAllPlaylists(String readToken, Integer pageSize, Integer pageNumber, SortByTypeEnum sortBy,
+	// SortOrderTypeEnum sortOrderType, EnumSet<VideoFieldEnum> videoFields, Set<String> customFields,
+	// EnumSet<PlaylistFieldEnum> playlistFields)
 	public static String getListPlaylistsSideMenu(String token, String limit) {
 		String result = "";
 
@@ -795,11 +843,13 @@ public class BrcUtils {
 			}
 			int totalPages = 0;
 
-			serverAddress = new URL("http://api.brightcove.com/services/library?command=find_all_playlists&playlist_fields=name,id,thumbnailURL&get_item_count=true&page_number=" + pageNumber + "&token=" + token);
-			//set up out communications stuff
+			serverAddress = new URL(
+					"http://api.brightcove.com/services/library?command=find_all_playlists&playlist_fields=name,id,thumbnailURL&get_item_count=true&page_number="
+							+ pageNumber + "&token=" + token);
+			// set up out communications stuff
 			connection = null;
 
-			//Set up the initial connection
+			// Set up the initial connection
 			connection = (HttpURLConnection) serverAddress.openConnection();
 			connection.setRequestMethod("GET");
 			connection.setDoOutput(true);
@@ -814,7 +864,6 @@ public class BrcUtils {
 				sb.append(line + '\n');
 			}
 
-
 			JSONObject js = new JSONObject(sb.toString());
 			totalPages = js.getInt("total_count");
 			if (firstElement < totalPages) {
@@ -825,7 +874,7 @@ public class BrcUtils {
 				}
 
 				JSONArray jarr = new JSONArray();
-				for (Iterator i = sortByValue(sortedjson).iterator(); i.hasNext(); ) {
+				for (Iterator i = sortByValue(sortedjson).iterator(); i.hasNext();) {
 					String key = (String) i.next();
 					jarr.put(sortedjson.get(key));
 
@@ -836,9 +885,8 @@ public class BrcUtils {
 				jsTotal = new JSONObject("{\"items\":[],\"results\":0}");
 			}
 
-
-			result = jsTotal.toString().replace("\"id\"", "\"videoid\"").replaceAll("\"videoid\":([0-9]*)", "\"path\":\"$1\"");
-
+			result = jsTotal.toString().replace("\"id\"", "\"videoid\"")
+					.replaceAll("\"videoid\":([0-9]*)", "\"path\":\"$1\"");
 
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -849,7 +897,7 @@ public class BrcUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			//close the connection, set all objects to null
+			// close the connection, set all objects to null
 			connection.disconnect();
 			rd = null;
 			sb = null;

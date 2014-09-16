@@ -4,4 +4,4 @@
     jcr:description="Brightcove Playlist Component"
     jcr:primaryType="cq:Component"
     jcr:title="Brightcove Playlist"
-    componentGroup="Page Components"/>
+    componentGroup="General"/>

@@ -1,0 +1,5 @@
+*.iml
+/brightcove-assembly/target
+/brightcove-webservices/target
+/brightcove-wrapper/target
+/.idea

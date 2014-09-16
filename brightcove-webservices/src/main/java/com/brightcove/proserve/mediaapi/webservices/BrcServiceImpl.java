@@ -17,7 +17,6 @@ import java.util.Hashtable;
 @Service
 @Properties({
 	@Property(name="readtoken", label="Read Token", description="Read Token", value=""),
-	@Property(name="writetoken", label="Write Token", description="Write Token", value=""),
 	@Property(name="previewPlayerLoc", label="Preview Video Player", description="Preview Player Path (Videos)", value="https://link.brightcove.com/services/player/bcpid1154829530001"),
 	@Property(name="previewPlayerListLoc", label="Preview Playlist Player", description="Preview Player Path (Playlists)", value="https://link.brightcove.com/services/player/bcpid1154829529001"),
 	@Property(name="defVideoPlayerID", label="Default Video Player ID", description="Default Video Player ID", value=""),

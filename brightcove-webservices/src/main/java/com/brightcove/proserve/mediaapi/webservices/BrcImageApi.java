@@ -1,9 +1,15 @@
 package com.brightcove.proserve.mediaapi.webservices;
 
-import com.brightcove.proserve.mediaapi.wrapper.ReadApi;
-import com.brightcove.proserve.mediaapi.wrapper.apiobjects.Video;
-import com.brightcove.proserve.mediaapi.wrapper.apiobjects.enums.VideoFieldEnum;
-import com.brightcove.proserve.mediaapi.wrapper.utils.CollectionUtils;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.URL;
+import java.util.EnumSet;
+import java.util.Set;
+
+import javax.imageio.ImageIO;
+import javax.servlet.ServletException;
+
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Service;
@@ -13,14 +19,10 @@ import org.apache.sling.api.servlets.SlingAllMethodsServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.imageio.ImageIO;
-import javax.servlet.ServletException;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.URL;
-import java.util.EnumSet;
-import java.util.Set;
+import com.brightcove.proserve.mediaapi.wrapper.ReadApi;
+import com.brightcove.proserve.mediaapi.wrapper.apiobjects.Video;
+import com.brightcove.proserve.mediaapi.wrapper.apiobjects.enums.VideoFieldEnum;
+import com.brightcove.proserve.mediaapi.wrapper.utils.CollectionUtils;
 
 @Service
 @Component
@@ -28,12 +30,14 @@ import java.util.Set;
 public class BrcImageApi extends SlingAllMethodsServlet {
 
 	@Override
-	protected void doPost(final SlingHttpServletRequest request, final SlingHttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(final SlingHttpServletRequest request, final SlingHttpServletResponse response)
+			throws ServletException, IOException {
 		response.setStatus(404);
 	}
 
 	@Override
-	protected void doGet(final SlingHttpServletRequest request, final SlingHttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(final SlingHttpServletRequest request, final SlingHttpServletResponse response)
+			throws ServletException, IOException {
 
 		BrcService brcService = BrcUtils.getSlingSettingService();
 		String ReadToken = brcService.getReadToken();

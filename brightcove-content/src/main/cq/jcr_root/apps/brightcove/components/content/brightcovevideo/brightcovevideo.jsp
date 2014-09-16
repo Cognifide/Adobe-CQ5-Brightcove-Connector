@@ -43,32 +43,31 @@
     String VideoRandomID = new String(video_uuid.randomUUID().toString().replaceAll("-",""));
 %>
 
-<cq:includeClientLib js="brc.BrightcoveExperiences-custom"/>
-
-<script language="JavaScript" type="text/javascript" src="https://sadmin.brightcove.com/js/BrightcoveExperiences.js"></script>
+<cq:include script="brightcovevideoui.jsp" />
 
 <% if (properties.get("videoPlayer", "").isEmpty()) {%>
 <cq:include script="/apps/brightcove/components/content/brightcovevideo/empty.jsp"/>
-<% } else if (WCMMode.fromRequest(slingRequest) == WCMMode.EDIT) {
-                %><h1>Right click here to edit</h1><%
-   }%>
-<div id="<%= VideoRandomID %>" style="style="margin-bottom: 0;margin-left: <%=margLeft%>;margin-right: <%=margRight%>;margin-top: 0;overflow-x: hidden;overflow-y: hidden;text-align: center;text-align:<%=properties.get("align","center")%>">
-    <object id="myExperience_<%= VideoRandomID %>" class="BrightcoveExperience">
-      <param name="bgcolor" value="#FFFFFF" />
-      <param name="width" value='<%=properties.get("width","480")%>' />
-      <param name="height" value='<%=properties.get("height","270")%>' />
-      <param name="playerID" value="<%=playerId%>" />
-      <param name="playerKey" value="<%=playerKey%>" />
-      <param name="isVid" value="true" />
-      <param name="isUI" value="true" />
-      <param name="dynamicStreaming" value="true" />
-      <param name="secureConnections" value="true" />
-      <param name="secureHTMLConnections" value="true" />
+<% } else {%>
+<div id="<%= VideoRandomID %>" style="text-align:<%=properties.get("align","center")%>" class="outer-container">
+        <object id="myExperience_<%= VideoRandomID %>" class="BrightcoveExperience">
+            <param name="bgcolor" value="#FFFFFF" />
+            <param name="width" value='<%=properties.get("width","480")%>' />
+            <param name="height" value='<%=properties.get("height","270")%>' />
+            <param name="playerID" value="<%=playerId%>" />
+            <param name="playerKey" value="<%=playerKey%>" />
+            <param name="isVid" value="true" />
+            <param name="isUI" value="true" />
+            <param name="dynamicStreaming" value="true" />
+            <param name="secureConnections" value="true" />
+            <param name="secureHTMLConnections" value="true" />
 
-      <param name="@videoPlayer" value='<%=properties.get("videoPlayer",String.class)%>' />
+            <param name="@videoPlayer" value='<%=properties.get("videoPlayer",String.class)%>' />
 
-    </object>
+        </object>
 </div>
+<%
+}
+%>
 
 <!--
 This script tag will cause the Brightcove Players defined above it to be created as soon

@@ -11,9 +11,9 @@
 		HTTPS support added.
 	</description>
 	<scm>
-		<url>https://github.com/Cognifide/Adobe-CQ5-Brightcove-Connector</url>
-		<connection>scm:git:git://github.com/Cognifide/Adobe-CQ5-Brightcove-Connector.git</connection>
-		<developerConnection>scm:git:https://github.com/Cognifide/Adobe-CQ5-Brightcove-Connector.git</developerConnection>
+		<url>https://github.com/wttech/Adobe-CQ5-Brightcove-Connector</url>
+		<connection>scm:git:git://github.com/wttech/Adobe-CQ5-Brightcove-Connector.git</connection>
+		<developerConnection>scm:git:https://github.com/wttech/Adobe-CQ5-Brightcove-Connector.git</developerConnection>
 	  <tag>brightcove-cq5-2.2.2</tag>
   </scm>
 
